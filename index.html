@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>MD-Html自由转换</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <style type="text/css">
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .but-r,
+        .but-l {
+            width: 70px;
+            height: 30px;
+            color: white;
+            margin: 20px 10px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .but-r {
+            border-right: none;
+            margin-left: -2px;
+            background-color: #33DCFF;
+            padding-left: 5px;
+        }
+
+        .but-r:before,
+        .but-r:after {
+            position: absolute;
+            left: 75px;
+            border: 15px solid transparent;
+            border-left-color: white;
+            content: ' ';
+
+        }
+
+        .but-r:after {
+            border-left-color: #33DCFF;
+        }
+
+        .but-l {
+            background-color: #FF7A33;
+            border-left: none;
+            margin-right: -2px;
+            background-color: #FF7A33;
+            padding-right: 5px;
+        }
+
+        .but-l:before,
+        .but-l:after {
+            position: absolute;
+            right: 75px;
+            border: 15px solid transparent;
+            border-right-color: white;
+            content: ' ';
+
+        }
+
+        .but-l:after {
+            border-right-color: #FF7A33;
+        }
+
+        .content {
+            display: flex;
+            margin: 0 auto;
+            width: 95vw;
+            height: 95vh;
+        }
+
+        .content-textarea {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-textarea h3 {
+            flex: none;
+            text-align: center;
+        }
+
+        .content-but {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 120px;
+        }
+
+
+        .textare {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            background-color: #f6f8fa;
+        }
+
+        #html-view {
+            padding: 10px;
+        }
+
+        .textare textarea {
+            position: absolute;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            outline: none;
+            padding: 10px;
+            padding-right: 3px;
+            background-color: #f6f8fa;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .hide {
+            display: none;
+        }
+        .html-title{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .html-title span{
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            color: #FF7A33;
+        }
+        #html-view{
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="content-textarea">
+            <div class="html-title">
+                <h3>HTML</h3><span onclick="showHtml()">切换</span>
+            </div>
+            <div class="textare">
+                <textarea id="html-input" class="show"></textarea>
+                <div id="html-view" class="hide"></div>
+            </div>
+        </div>
+        <div class="content-but">
+            <div class="but-r" onclick="htmlToMd()">To MD</div>
+            <div class="but-l" onclick="mdToHtml()">To HTML</div>
+        </div>
+        <div class="content-textarea">
+            <h3>MARKDOWN </h3>
+            <div class="textare">
+                <textarea id="md-input"></textarea>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+    <script type="text/javascript">
+        var turndownService = new TurndownService({
+            headingStyle: 'atx',
+            hr: '---',
+            codeBlockStyle: 'fenced',
+        })
+        var converter = new showdown.Converter();
+
+        var html = document.getElementById('html-input')
+        var md = document.getElementById('md-input')
+        var htmlView = document.getElementById('html-view')
+
+        function htmlToMd() {
+            md.value = turndownService.turndown(html.value);
+        }
+
+        function mdToHtml() {
+            let str = converter.makeHtml(md.value);
+            html.value = str
+            htmlView.innerHTML = str
+        }
+
+        function showHtml() {
+            if (htmlView.classList.contains("hide")) {
+                htmlView.classList.remove('hide')
+                htmlView.classList.add('show')
+                html.classList.remove('show')
+                html.classList.add('hide')
+            } else {
+                htmlView.classList.add('hide')
+                htmlView.classList.remove('show')
+                html.classList.add('show')
+                html.classList.remove('hide')
+            }
+        }
+    </script>
+</body>
+
+</html>
